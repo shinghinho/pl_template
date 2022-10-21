@@ -1,4 +1,5 @@
 {
+
 open Parser
 open Lexing
 
@@ -6,7 +7,7 @@ exception SyntaxError of string
 
 }
 
-let int = '-'? ['0'-'9'] ['0'-'9']*
+let int = ['0'-'9'] ['0'-'9']*
 let sep = [' ' '\t' '\n']+
 let name = ['a'-'z' '_']+
 

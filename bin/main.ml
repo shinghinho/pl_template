@@ -15,5 +15,4 @@ let () =
   else
     let path = argv.(1) in
     let s = read_file path in
-    let p = Parser.program Lexer.read (Lexing.from_string s) in
-    Interpreter.interpret p
+    Interpreter.interpret s

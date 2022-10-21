@@ -5,10 +5,10 @@ type env = (name,int) Hashtbl.t
 
 let new_env : env = Hashtbl.create 32
 
-let rec eval_value (sigma : env ref) =
+let rec eval_value (sigma : env) =
   function
   | Var x -> 
-    (match Hashtbl.find_opt !sigma x with
+    (match Hashtbl.find_opt sigma x with
      | Some v -> v
      | None -> print_endline ("Runtime error: Unknown variable " ^ x); exit (-1))
   | Num i -> i
@@ -18,16 +18,10 @@ let rec eval_value (sigma : env ref) =
   | Div (x,y) -> eval_binop sigma (fun x y -> x/y) x y
 and eval_binop sigma f x y = f (eval_value sigma x) (eval_value sigma y)
 
-let rec eval (sigma : env ref) = 
+let rec eval (sigma : env) = 
   function
   | Seq (p,q) -> eval sigma p; eval sigma q
-  | Asg (x,e) -> 
-      let v = eval_value sigma e in
-      (Hashtbl.add !sigma x v)
+  | Asg (x,e) -> let v = eval_value sigma e in Hashtbl.add sigma x v
   | Print e -> print_endline (string_of_int (eval_value sigma e))
 
-let interpret =
-  let sigma = ref new_env
-  in eval sigma
-
-let interpret_string s = eval (ref new_env) (Parser.program Lexer.read (from_string s))
+let interpret s = eval new_env (Parser.program Lexer.read (from_string s))
