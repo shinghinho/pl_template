@@ -1,0 +1,4 @@
+(executable
+ (public_name pl_template)
+ (name main)
+ (libraries mypl))
